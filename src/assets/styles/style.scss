@@ -1,0 +1,119 @@
+@import 'primeicons/primeicons.css';
+
+$font-stack: Arial, sans-serif;
+$primary-color: #3498db;
+$primary-hover-color: #2980b9;
+$text-color: #333;
+$background-color: #f9f9f9;
+$border-radius: 4px;
+$line-height: 1.6;
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+}
+
+body {
+    font-family: $font-stack;
+    line-height: $line-height;
+    background-color: $background-color;
+    color: $text-color;
+}
+
+// Typography
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+h1 {
+    font-size: 2rem;
+}
+
+h2 {
+    font-size: 1.75rem;
+}
+
+h3 {
+    font-size: 1.5rem;
+}
+
+// Link styling
+a {
+    color: $primary-color;
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+// Button styles
+button {
+    font-family: inherit;
+    border: none;
+    border-radius: $border-radius;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &.primary {
+        background-color: $primary-color;
+        color: white;
+
+        &:hover {
+            background-color: $primary-hover-color;
+        }
+    }
+}
+
+// Form styles
+input, select, textarea {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: $border-radius;
+    margin-bottom: 1rem;
+
+    &:focus {
+        border-color: $primary-color;
+        outline: none;
+    }
+}
+
+// Utility classes
+.hidden {
+    display: none;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.mt-2 {
+    margin-top: 0.5rem;
+}
+
+.mb-2 {
+    margin-bottom: 0.5rem;
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+    body {
+        font-size: 14px;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    h2 {
+        font-size: 1.25rem;
+    }
+}
