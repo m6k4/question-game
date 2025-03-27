@@ -12,9 +12,8 @@ import useSession from "@/session/composables/useSession";
 import CreateNewPlayer from "@/player/components/CreateNewPlayer.vue";
 
 const toast = useToast();
-const { sessionList, createSession, currentSessionId } = useSession();
+const { createSession, createdSessionId } = useSession();
 
-console.log(sessionList);
 const initialValues = reactive({
   sessionName: "",
   playersNumber: "",
@@ -51,9 +50,9 @@ const onFormSubmit = async ({ values }) => {
 </script>
 
 <template>
-  <div v-if="!currentSessionId" class="CreateNewSession">
+  <div v-if="!createdSessionId" class="CreateNewSession">
     <h1>Create New Session</h1>
-    {{ currentSessionId }} {{ sessionList }}
+    {{ createdSessionId }}
     <Toast />
     <Form
       v-slot="$form"
@@ -91,7 +90,7 @@ const onFormSubmit = async ({ values }) => {
       />
     </Form>
   </div>
-  <CreateNewPlayer v-else :session-id="currentSessionId" :is-host="true" />
+  <CreateNewPlayer v-else :session-id="createdSessionId" :is-host="true" />
 </template>
 
 <style scoped lang="scss">

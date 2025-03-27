@@ -15,25 +15,25 @@ interface Session {
   currentQuestionId: string | null;
 }
 
-// const currentSessionDetails = ref<Session | null>(null);
-
 export default function useSession(): {
   sessionList: Ref<Array<Session>>;
   createSession: (name: string, playerCount: number) => Promise<void>;
+  updateSession: (updatedFields: Partial<Session>) => Promise<void>;
   createdSessionId: Ref<string>;
   isLoading: Ref<boolean>;
   currentSessionDetails: Ref<Session | null>;
 } {
 
   const route = useRoute();
-  const currentSessionId = route.params.sessionId;
+  const currentSessionId = route.params.sessionId as string;
  
   const createdSessionId = ref<string>("");
   const isLoading = ref<boolean>(false);
-//add loading state
+  const sessionRef = collection(db, "sessions");
+
 
   isLoading.value = true;
-  const {data: sessions, promise } = useCollection(collection(db, "sessions").withConverter<Session>({
+  const {data: sessions, promise } = useCollection(sessionRef.withConverter<Session>({
     fromFirestore: (snapshot) => {
       const data = firestoreDefaultConverter.fromFirestore(snapshot);
       if (!data) throw new Error("Invalid session data.");
@@ -55,9 +55,7 @@ export default function useSession(): {
     isLoading.value = false;
   })
 
-  
   const createSession = async (name: string, playerCount: number) => {
-    const sessionRef = collection(db, "sessions");
     const newSessionDocRef = doc(sessionRef); 
     
     await setDoc(newSessionDocRef, {
@@ -72,8 +70,31 @@ export default function useSession(): {
     console.log("Session created successfully.", newSessionDocRef.id);
   }
   
+  const updateSession = async (updatedFields: Partial<Session>): Promise<void> => {
+    let playerRef = null;
+    let questionRef = null;
+    const specificSessionRef = doc(sessionRef, currentSessionId); 
+
+    console.log("updatedFields", updatedFields);
+    if(updatedFields.currentAnsweringPlayerId) {
+      playerRef = doc(db, "players", updatedFields.currentAnsweringPlayerId);
+    }
+    if(updatedFields.currentQuestionId) {
+      questionRef = doc(db, "questions", updatedFields.currentQuestionId);
+    }
+
+    console.log("playerRef", playerRef);
+    console.log("questionRef", questionRef);
+    await setDoc(specificSessionRef, {
+      ...updatedFields,
+      ...playerRef && { currentAnsweringPlayerId: playerRef },
+      ...questionRef && { currentQuestionId: questionRef },
+    }, { merge: true });
+    console.log("Session updated successfully:", currentSessionId);
+  };
 
   const sessionList = computed(() => sessions.value);
+
   const currentSessionDetails = computed(() => {
     return sessions.value.find((session) => session.id === currentSessionId) || null;
 });
@@ -82,6 +103,7 @@ export default function useSession(): {
   return {
     sessionList,
     createSession,
+    updateSession,
     createdSessionId,
     isLoading,
     currentSessionDetails,
