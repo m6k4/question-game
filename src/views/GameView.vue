@@ -26,7 +26,6 @@ watch(playerList, () => {
 });
 
 const isAllPlayersReady = computed(() => {
-  console.log("readi", currentSessionDetails.value.playerCount);
   return currentSessionDetails.value.playerCount == playerList.value.length;
 });
 
@@ -52,10 +51,6 @@ const playerCreated = () => {
   <div v-else class="GameView">
     <WrongSessionId v-if="!isValidSessionId()" />
     <div v-else-if="isValidSessionId() && !isAllPlayersReady">
-      <h1>Game View</h1>
-      Session Details: {{ currentSessionDetails }} Players List
-      {{ playerList }} ISPLAYERINLOCALSTORAGE:
-      {{ isPlayerInLocalStorageInList }}
       <WaitingForPlayers
         v-if="isPlayerInLocalStorageInList"
         :players="playerList"
@@ -73,10 +68,8 @@ const playerCreated = () => {
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .GameView {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  height: 100vh;
 }
 </style>

@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { defineProps, onMounted, ref, computed } from "vue";
-import useQuestion from "@/composables/useQuestion";
+import useQuestion from "@/question/composables/useQuestion";
 import usePlayer from "@/player/composables/usePlayer";
 import useSession from "@/session/composables/useSession";
-import Button from "primevue/button";
+import TheTimer from "@/game/components/TheTimer.vue";
+import QuestionCard from "@/question/components/QuestionCard.vue";
 import { useRoute } from "vue-router";
+import HostControlsPanel from "@/game/components/HostControlsPanel.vue";
 
 defineProps({
   players: {
@@ -31,6 +33,19 @@ const answeringPlayer = ref(null);
 onMounted(async () => {
   await getCurrentPlayer();
   await fetchQuestions();
+  startGame();
+  // drawQuestion();
+  // setAnsweringPlayer();
+  // localStorage.setItem(
+  //   "playerIndex",
+  //   JSON.stringify(answeringPlayerIndex.value),
+  // );
+  // updateSession({
+  //   currentAnsweringPlayerId: answeringPlayer.value.id,
+  // });
+});
+
+const startGame = () => {
   drawQuestion();
   setAnsweringPlayer();
   localStorage.setItem(
@@ -41,7 +56,7 @@ onMounted(async () => {
     currentQuestionId: drawnQuestion.value.id,
     currentAnsweringPlayerId: answeringPlayer.value.id,
   });
-});
+};
 
 const setAnsweringPlayer = () => {
   const storedIndex = localStorage.getItem("playerIndex");
@@ -82,6 +97,10 @@ const getNextPlayer = async () => {
   });
 };
 
+const startTimer = () => {
+  updateSession({}, true);
+};
+
 const currentQuestionFromSession = computed(() => {
   return currentSessionDetails.value.currentQuestionId;
 });
@@ -89,41 +108,39 @@ const currentQuestionFromSession = computed(() => {
 
 <template>
   <div class="ActiveGame">
-    <h1>Active Game</h1>
-    {{ currentSessionDetails }}
-    <div class="ActiveGame__question">
-      <div class="ActiveGame__questionText">
-        <p>{{ currentQuestionFromSession?.description }}</p>
-      </div>
-      <div class="ActiveGame__timer">
-        <p>3:00</p>
-      </div>
+    <h1 class="ActiveGame__title">Let's answer the question!</h1>
+    <div v-if="!currentQuestionFromSession" class="ActiveGame__waiting">
+      Wait until host start the game...
     </div>
-    <div class="ActiveGame__playerList">
-      <div
-        v-for="player in players"
-        :key="player.id"
-        class="ActiveGame__playerDetails"
-      >
-        <p
-          :class="{
-            ActiveGame__playerName: true,
-            'ActiveGame__playerName--active':
-              player.id === currentSessionDetails?.currentAnsweringPlayerId?.id,
-          }"
+    <div v-else class="ActiveGame__board">
+      <QuestionCard :description="currentQuestionFromSession?.description" />
+      <TheTimer :start-date="currentSessionDetails?.timerStartedAt" />
+      <div class="ActiveGame__playerList">
+        <div
+          v-for="player in players"
+          :key="player.id"
+          class="ActiveGame__playerDetails"
         >
-          Player: {{ player.name }}
-        </p>
+          <p
+            :class="{
+              ActiveGame__playerName: true,
+              'ActiveGame__playerName--active':
+                player.id ===
+                currentSessionDetails?.currentAnsweringPlayerId?.id,
+            }"
+          >
+            Player: {{ player.name }}
+          </p>
+        </div>
       </div>
     </div>
-    <div v-if="currentPlayer?.isHost" class="ActiveGame__hostControls">
-      <Button class="ActiveGame__button" @click="getNextPlayer()">
-        Next Player
-      </Button>
-      <Button class="ActiveGame__button" @click="getNextQuestion()">
-        Draw a Question
-      </Button>
-    </div>
+    <HostControlsPanel
+      v-if="currentPlayer?.isHost"
+      @start-game="startGame"
+      @get-next-player="getNextPlayer"
+      @get-next-question="getNextQuestion"
+      @start-timer="startTimer"
+    />
   </div>
 </template>
 
@@ -131,37 +148,35 @@ const currentQuestionFromSession = computed(() => {
 .ActiveGame {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   align-items: center;
-  padding: 20px;
+  padding: 60px 0;
   display: flex;
-  justify-content: center;
   align-items: center;
   text-align: center;
-  min-height: 80vh;
+  min-height: 100vh;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 0;
+  min-height: 100vh;
 
-  &__question {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    width: 80%;
-    max-width: 500px;
-    text-align: center;
-    margin-top: auto;
+  &__title {
+    margin-bottom: 20px;
   }
 
-  &__questionText {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 10px;
+  &__waiting {
+    font-size: 20px;
+    color: #888;
+    margin-top: 20px;
   }
 
-  &__timer {
-    font-size: 18px;
-    color: #ff4f4f;
-    font-weight: bold;
+  &__board {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: 20px;
   }
 
   &__playerList {

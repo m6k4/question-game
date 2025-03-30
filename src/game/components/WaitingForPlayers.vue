@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { defineProps } from "vue";
-import TheLoader from "@/components/common/TheLoader.vue";
 
 defineProps({
   players: {
@@ -13,14 +12,14 @@ defineProps({
 
 <template>
   <div class="WaitingForPlayers">
-    <h1>Waiting for all players</h1>
-    <TheLoader />
+    <h1>Waiting for all players ...</h1>
     <div class="WaitingForPlayers__playerList">
       <div
         v-for="player in players"
         :key="player.id"
         class="WaitingForPlayers__playerDetails"
       >
+        TEST
         <p class="WaitingForPlayers__playerName">Player: {{ player.name }}</p>
         <p class="WaitingForPlayers__playerStatus">connected</p>
       </div>

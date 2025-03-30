@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import TheFooter from "@/components/platform/TheFooter.vue";
-import TheMenu from "@/components/platform/TheMenu.vue";
+// import TheFooter from "@/components/platform/TheFooter.vue";
+// import TheMenu from "@/components/platform/TheMenu.vue";
 // import CreateNewSession from "@/session/components/CreateNewSession.vue";
 // import { db } from "@/firebase";
 //get collection from firebase
@@ -17,14 +17,14 @@ import TheMenu from "@/components/platform/TheMenu.vue";
 
 <template>
   <div class="PlatformView">
-    <TheMenu />
+    <!-- <TheMenu /> -->
     <div class="PlatformView__content">
       <!-- <CreateNewSession /> -->
       <router-view />
     </div>
-    <div class="PlatformView__footer">
+    <!-- <div class="PlatformView__footer">
       <TheFooter />
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -36,7 +36,7 @@ import TheMenu from "@/components/platform/TheMenu.vue";
   min-height: 100svh;
 
   &__content {
-    padding: 40px;
+    padding: 0 40px;
   }
 
   &__footer {

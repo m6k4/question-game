@@ -5,6 +5,7 @@ import { collection, doc, setDoc, Timestamp } from "firebase/firestore";
 import { computed, ref, type Ref } from "vue";
 import { firestoreDefaultConverter } from 'vuefire'
 import { useRoute } from "vue-router";
+import dayjs from "dayjs";
 
 interface Session {
   id: string;
@@ -13,6 +14,7 @@ interface Session {
   playerCount: number | null;
   currentAnsweringPlayerId: string | null;
   currentQuestionId: string | null;
+  timerStartedAt: string | null;
 }
 
 export default function useSession(): {
@@ -47,6 +49,7 @@ export default function useSession(): {
         playerCount: data.playerCount,
         currentAnsweringPlayerId: data.currentAnsweringPlayerId,
         currentQuestionId: data.currentQuestionId,
+        timerStartedAt: dayjs.unix(data.timerStartedAt?.seconds).format("YYYY-MM-DDTHH:mm:ss"),
       } as Session;
     },
     toFirestore: firestoreDefaultConverter.toFirestore,
@@ -64,29 +67,28 @@ export default function useSession(): {
       createdAt: Timestamp.now(),
       currentAnsweringPlayerId: null,
       currentQuestionId: null,
+      timerStartedAt: null,
     })
     
     createdSessionId.value = newSessionDocRef.id;
     console.log("Session created successfully.", newSessionDocRef.id);
   }
   
-  const updateSession = async (updatedFields: Partial<Session>): Promise<void> => {
+  const updateSession = async (updatedFields: Partial<Session>, startTimer = false): Promise<void> => {
     let playerRef = null;
     let questionRef = null;
     const specificSessionRef = doc(sessionRef, currentSessionId); 
 
-    console.log("updatedFields", updatedFields);
+    console.log("current timestamp", Timestamp.now().toDate());
     if(updatedFields.currentAnsweringPlayerId) {
       playerRef = doc(db, "players", updatedFields.currentAnsweringPlayerId);
     }
     if(updatedFields.currentQuestionId) {
       questionRef = doc(db, "questions", updatedFields.currentQuestionId);
     }
-
-    console.log("playerRef", playerRef);
-    console.log("questionRef", questionRef);
     await setDoc(specificSessionRef, {
       ...updatedFields,
+      ...startTimer && { timerStartedAt: Timestamp.now() },
       ...playerRef && { currentAnsweringPlayerId: playerRef },
       ...questionRef && { currentQuestionId: questionRef },
     }, { merge: true });
