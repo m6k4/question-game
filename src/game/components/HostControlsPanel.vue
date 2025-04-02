@@ -11,22 +11,32 @@ const emit = defineEmits([
 </script>
 <template>
   <div class="HostControlsPanel">
-    <Button class="HostControlsPanel__button" @click="() => emit('startGame')">
+    <Button
+      severity="info"
+      class="HostControlsPanel__button"
+      @click="() => emit('startGame')"
+    >
       Start Game
     </Button>
     <Button
+      severity="info"
       class="HostControlsPanel__button"
       @click="() => emit('getNextPlayer')"
     >
       Next Player
     </Button>
     <Button
+      severity="info"
       class="HostControlsPanel__button"
       @click="() => emit('getNextQuestion')"
     >
       Draw a Question
     </Button>
-    <Button class="HostControlsPanel__button" @click="() => emit('startTimer')">
+    <Button
+      severity="info"
+      class="HostControlsPanel__button"
+      @click="() => emit('startTimer')"
+    >
       Start Timer
     </Button>
   </div>
@@ -53,13 +63,13 @@ const emit = defineEmits([
     width: 100%;
     padding: 10px;
     font-size: 16px;
-    background-color: #50af53;
+    // background-color: #50af53;
     color: #fff;
     border-radius: 5px;
     cursor: pointer;
 
     &:hover {
-      background-color: #45a049;
+      // background-color: #45a049;
     }
   }
 }

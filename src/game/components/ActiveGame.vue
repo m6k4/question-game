@@ -3,7 +3,7 @@ import { defineProps, onMounted, ref, computed } from "vue";
 import useQuestion from "@/question/composables/useQuestion";
 import usePlayer from "@/player/composables/usePlayer";
 import useSession from "@/session/composables/useSession";
-import TheTimer from "@/game/components/TheTimer.vue";
+import GameTimer from "@/game/components/GameTimer.vue";
 import QuestionCard from "@/question/components/QuestionCard.vue";
 import { useRoute } from "vue-router";
 import HostControlsPanel from "@/game/components/HostControlsPanel.vue";
@@ -114,7 +114,7 @@ const currentQuestionFromSession = computed(() => {
     </div>
     <div v-else class="ActiveGame__board">
       <QuestionCard :description="currentQuestionFromSession?.description" />
-      <TheTimer :start-date="currentSessionDetails?.timerStartedAt" />
+      <GameTimer :start-date="currentSessionDetails?.timerStartedAt" />
       <div class="ActiveGame__playerList">
         <div
           v-for="player in players"

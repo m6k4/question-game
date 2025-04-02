@@ -18,7 +18,12 @@ defineProps({
 </template>
 
 <style scoped lang="scss">
+@import url("https://fonts.googleapis.com/css2?family=Atma:wght@300;400;500;600;700&family=Limelight&family=Playfair+Display&display=swap");
+
 .QuestionCard {
+  font-family: "Atma", system-ui;
+  font-weight: 400;
+  font-style: normal;
   background-color: #fff;
   color: #000;
   border: 1px solid #ddd;
@@ -33,7 +38,6 @@ defineProps({
 
   &__description {
     font-size: 24px;
-    font-weight: bold;
     margin-bottom: 10px;
   }
 }

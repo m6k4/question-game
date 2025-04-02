@@ -78,14 +78,14 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="TheTimer">
+  <div class="GameTimer">
     <p v-if="isTimerExpired">Time is up!</p>
     <p v-else>{{ getTimeLeft() }}</p>
   </div>
 </template>
 
 <style scoped>
-.TheTimer {
+.GameTimer {
   display: flex;
   flex-direction: column;
   align-items: center;

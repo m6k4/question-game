@@ -30,7 +30,6 @@ const router = useRouter();
 
   &__button {
     margin: 20px 0px;
-    width: 100%;
   }
 }
 </style>
