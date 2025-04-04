@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed, ref, onMounted, onBeforeUnmount, watch } from "vue";
-import dayjs from "dayjs";
+import { defineProps, watch } from "vue";
+import { useTimer } from "@/game/composables/useTimer";
 
 const props = defineProps({
   startDate: {
@@ -10,14 +10,7 @@ const props = defineProps({
   },
 });
 
-let timerInterval: NodeJS.Timeout | null = null;
-const timerDuration = 3 * 60 * 1000;
-const timeLeft = ref(timerDuration);
-const timerEndDate = ref(null);
-
-const isTimerExpired = computed(() => {
-  return timeLeft.value <= 0;
-});
+const { isTimerExpired, getTimeLeft, resetTimer } = useTimer(props.startDate);
 
 watch(
   () => props.startDate,
@@ -25,49 +18,6 @@ watch(
     resetTimer(newStartDate);
   },
 );
-
-const resetTimer = (newStartDate: string) => {
-  clearInterval(timerInterval!);
-  setEndDate(newStartDate);
-  updateTimer();
-  startTimer();
-};
-
-const setEndDate = (startDate: string) => {
-  timerEndDate.value = dayjs(startDate).add(timerDuration, "milliseconds");
-};
-
-const startTimer = () => {
-  timerInterval = setInterval(updateTimer, 1000);
-};
-
-const getTimeLeft = () => {
-  const minutes = Math.floor((timeLeft.value % (1000 * 60 * 60)) / (1000 * 60));
-  const seconds = Math.floor((timeLeft.value % (1000 * 60)) / 1000);
-  return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
-};
-
-const updateTimer = () => {
-  const now = dayjs();
-  const remainingTime = timerEndDate.value.diff(now);
-
-  if (remainingTime > 0) {
-    timeLeft.value = remainingTime;
-  } else {
-    timeLeft.value = 0;
-  }
-};
-
-setEndDate(props.startDate);
-
-onMounted(() => {
-  updateTimer();
-  startTimer();
-});
-
-onBeforeUnmount(() => {
-  if (timerInterval) clearInterval(timerInterval);
-});
 </script>
 
 <template>

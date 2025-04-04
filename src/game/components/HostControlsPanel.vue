@@ -36,7 +36,7 @@ const emit = defineEmits([
       class="HostControlsPanel__button"
       @click="() => emit('startTimer')"
     >
-      Start Timer
+      Restart Timer
     </Button>
   </div>
 </template>

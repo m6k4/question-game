@@ -5,21 +5,7 @@ import { collection, doc, getDoc, query, setDoc, where } from "firebase/firestor
 import { computed, type Ref, ref } from "vue";
 import { useCollection } from "vuefire";
 import { firestoreDefaultConverter } from 'vuefire'
-
-
-interface NewPlayer {
-  name: string;
-  sessionId: string;
-  isHost: boolean;
-  avatarName: string;
-}
-
-interface Player {
-  id: string;
-  name: string | null;
-  isHost: boolean;
-  avatarName: string;
-}
+import type { Player, NewPlayer } from "@/types/types";
 
 export function usePlayer(sessionId: string): {
   playerList:  Ref<Array<Player>>;

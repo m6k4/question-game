@@ -1,19 +1,20 @@
 
 import { db } from "@/firebase"; 
-import { collection, getDocs } from "firebase/firestore"; 
+import { collection, getDocs, query, where  } from "firebase/firestore"; 
 import { ref, type Ref } from "vue";
 
 
 interface Question {
   id: string;
   description: string | null;
+  level: string | null;
 }
 
 const questionList = ref<Question[]>([]); 
 const availableQuestionList = ref<Question[]>([]);
 const drawnQuestion = ref<Question | null>(null);
 
-export function useQuestion(): {
+export function useQuestion(level: number): {
   questionList:  Ref<Array<Question>>;
   fetchQuestions: () => void;
   drawQuestion: () => void;
@@ -26,16 +27,19 @@ export function useQuestion(): {
   const fetchQuestions = async () => {
     isLoading.value = true;
     const questionsRef = collection(db, "questions");
-
+    const questionsWithSpecificLevelRef = query(questionsRef, where("level", "==", Number(level)));
+    
     try {
-        const querySnapshot = await getDocs(questionsRef);
+        const querySnapshot = await getDocs(questionsWithSpecificLevelRef);
         querySnapshot.forEach((doc) => {
             const data = doc.data();
             questionList.value.push({
                 id: doc.id,
                 description: data.description || null,
+                level: data.level || null,
             });
         });
+
         availableQuestionList.value = questionList.value;
         isLoading.value = false;
     } catch (error) {
@@ -43,7 +47,6 @@ export function useQuestion(): {
         console.error("Error fetching questions:", error);
     }
   };
-
 
   const drawQuestion = () => {
       if (availableQuestionList.value.length > 0) {

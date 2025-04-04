@@ -15,13 +15,13 @@ interface Session {
   currentAnsweringPlayerId: string | null;
   currentQuestionId: string | null;
   timerStartedAt: string | null;
-  level: number | null;
+  level: number;
 }
 
 export function useSession(): {
   sessionList: Ref<Array<Session>>;
   createSession: (name: string, playerCount: number, level: number) => Promise<void>;
-  updateSession: (updatedFields: Partial<Session>) => Promise<void>;
+  updateSession: (updatedFields: Partial<Session>, startTimer: boolean) => Promise<void>;
   createdSessionId: Ref<string>;
   isLoading: Ref<boolean>;
   currentSessionDetails: Ref<Session | null>;
@@ -48,7 +48,9 @@ export function useSession(): {
         playerCount: data.playerCount,
         currentAnsweringPlayerId: data.currentAnsweringPlayerId,
         currentQuestionId: data.currentQuestionId,
-        timerStartedAt: dayjs.unix(data.timerStartedAt?.seconds).format("YYYY-MM-DDTHH:mm:ss"),
+        timerStartedAt: data.timerStartedAt 
+        ? dayjs.unix(data.timerStartedAt?.seconds).format("YYYY-MM-DDTHH:mm:ss") 
+        : null,
         level: data.level,
       } as Session;
     },
