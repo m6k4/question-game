@@ -13,7 +13,7 @@ const questionList = ref<Question[]>([]);
 const availableQuestionList = ref<Question[]>([]);
 const drawnQuestion = ref<Question | null>(null);
 
-export default function useQuestion(): {
+export function useQuestion(): {
   questionList:  Ref<Array<Question>>;
   fetchQuestions: () => void;
   drawQuestion: () => void;
@@ -49,7 +49,6 @@ export default function useQuestion(): {
       if (availableQuestionList.value.length > 0) {
           const randomIndex = Math.floor(Math.random() * availableQuestionList.value.length);
           drawnQuestion.value = availableQuestionList.value[randomIndex];
-          
       }
     
       availableQuestionList.value = availableQuestionList.value.filter(
@@ -59,7 +58,6 @@ export default function useQuestion(): {
       if(availableQuestionList.value.length === 0) {
           availableQuestionList.value = questionList.value;
       }
-      console.log("availableQuestionList", availableQuestionList.value);
   };
 
   return {

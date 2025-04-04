@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { Form } from "@primevue/forms";
-import { defineProps, reactive, ref } from "vue";
+import { reactive, ref } from "vue";
 import InputText from "primevue/inputtext";
 import Button from "primevue/button";
-import usePlayer from "@/player/composables/usePlayer";
+import { usePlayer } from "@/player/composables/usePlayer";
 import { useRouter } from "vue-router";
+import AvatarSelect from "@/player/components/AvatarSelect.vue";
 
 const router = useRouter();
 
@@ -32,13 +33,19 @@ const initialValues = reactive({
   isHost: props.isHost,
 });
 
+const avatarName = ref<string | null>(null);
+
+const selectAvatar = (path: string) => {
+  avatarName.value = path;
+};
+
 const onFormSubmit = async ({ values }) => {
-  console.log(values);
   isLoading.value = true;
   createPlayer({
     sessionId: props.sessionId,
     name: values.name,
     isHost: props.isHost,
+    avatarName: avatarName.value,
   }).then(() => {
     if (props.isHost) {
       router.push(`/sessionId/${props.sessionId}`);
@@ -54,17 +61,16 @@ const onFormSubmit = async ({ values }) => {
 <template>
   <div class="CreateNewPlayer">
     <h1>Create New {{ isHost ? "Host" : "Player" }}</h1>
-    <h3>Session id: {{ sessionId }}</h3>
+    <h3>Set your player name and choose avatar</h3>
     <Form :initial-values class="CreateNewPlayer__form" @submit="onFormSubmit">
-      <div class="flex flex-col gap-1">
-        <InputText
-          class="CreateNewPlayer__form-row"
-          name="name"
-          type="text"
-          placeholder="Set your player name"
-          fluid
-        />
-      </div>
+      <InputText
+        class="CreateNewPlayer__form-row"
+        name="name"
+        type="text"
+        placeholder="Name"
+        fluid
+      />
+      <AvatarSelect @avatar-selected="selectAvatar" />
       <Button
         class="CreateNewPlayer__form-row"
         type="submit"

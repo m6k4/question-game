@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import { defineProps, onMounted, ref, computed } from "vue";
-import useQuestion from "@/question/composables/useQuestion";
-import usePlayer from "@/player/composables/usePlayer";
-import useSession from "@/session/composables/useSession";
+import { onMounted, ref, computed } from "vue";
+import { useQuestion } from "@/question/composables/useQuestion";
+import { usePlayer } from "@/player/composables/usePlayer";
+import { useSession } from "@/session/composables/useSession";
 import GameTimer from "@/game/components/GameTimer.vue";
 import QuestionCard from "@/question/components/QuestionCard.vue";
 import { useRoute } from "vue-router";
 import HostControlsPanel from "@/game/components/HostControlsPanel.vue";
+import PlayerGameCard from "@/player/components/PlayerGameCard.vue";
 
 defineProps({
   players: {
@@ -116,21 +117,14 @@ const currentQuestionFromSession = computed(() => {
       <QuestionCard :description="currentQuestionFromSession?.description" />
       <GameTimer :start-date="currentSessionDetails?.timerStartedAt" />
       <div class="ActiveGame__playerList">
-        <div
-          v-for="player in players"
-          :key="player.id"
-          class="ActiveGame__playerDetails"
-        >
-          <p
-            :class="{
-              ActiveGame__playerName: true,
-              'ActiveGame__playerName--active':
-                player.id ===
-                currentSessionDetails?.currentAnsweringPlayerId?.id,
-            }"
-          >
-            Player: {{ player.name }}
-          </p>
+        <div v-for="player in players" :key="player.id">
+          <PlayerGameCard
+            :player-name="player.name"
+            :avatar-name="player.avatarName"
+            :is-answering-player="
+              player.id === currentSessionDetails?.currentAnsweringPlayerId?.id
+            "
+          />
         </div>
       </div>
     </div>
@@ -183,19 +177,9 @@ const currentQuestionFromSession = computed(() => {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 10px;
+    gap: 20px;
     margin-top: 20px;
     margin-bottom: auto;
-  }
-
-  &__playerDetails {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 10px;
-    width: 150px;
-    text-align: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 
   &__playerName {

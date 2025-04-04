@@ -34,7 +34,7 @@
   flex-direction: column;
   min-height: 100vh;
   min-height: 100svh;
-  background: linear-gradient(135deg, #f0f4f8, #cfdef3);
+  background-color: #efdd91;
 
   &__content {
     padding: 0 40px;

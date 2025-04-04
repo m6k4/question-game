@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { defineProps } from "vue";
-
 defineProps({
   description: {
     type: String,
@@ -24,7 +22,7 @@ defineProps({
   font-family: "Atma", system-ui;
   font-weight: 400;
   font-style: normal;
-  background-color: #fff;
+  background: rgba(255, 255, 255, 0.6);
   color: #000;
   border: 1px solid #ddd;
   border-radius: 10px;

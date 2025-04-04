@@ -11,15 +11,17 @@ interface NewPlayer {
   name: string;
   sessionId: string;
   isHost: boolean;
+  avatarName: string;
 }
 
 interface Player {
   id: string;
   name: string | null;
   isHost: boolean;
+  avatarName: string;
 }
 
-export default function usePlayer(sessionId: string): {
+export function usePlayer(sessionId: string): {
   playerList:  Ref<Array<Player>>;
   createPlayer: (newPlayer: NewPlayer) => Promise<void>;
   getCurrentPlayer: () => void;
@@ -43,12 +45,11 @@ export default function usePlayer(sessionId: string): {
         const data = firestoreDefaultConverter.fromFirestore(snapshot);
         if (!data) throw new Error("Invalid session data.");
 
-        
-        console.log("Session data loaded successfully.", data.id);
         return {
           id: data.id,
           name: data.name,
           isHost: data.isHost,
+          avatarName: data.avatarName,
         } as Player;
       },
       toFirestore: firestoreDefaultConverter.toFirestore,
@@ -63,13 +64,13 @@ export default function usePlayer(sessionId: string): {
         name: newPlayer.name,
         sessionId: currentSessionRef,
         isHost: newPlayer.isHost,
+        avatarName: newPlayer.avatarName,
       }).then(() => {
         const playerData = {
           id: newPlayerDocRef.id,
           name: newPlayer.name
         }
         localStorage.setItem('playerData', JSON.stringify(playerData));
-        console.log("Document written with ID: ", newPlayerDocRef.id);
       }).catch((error) => {
         console.error("Error adding document: ", error);
       });
@@ -93,6 +94,7 @@ export default function usePlayer(sessionId: string): {
             id: playerSnapshot.id,
             name: data.name,
             isHost: data.isHost,
+            avatarName: data.avatarName,
           };
         } else {
           console.log("No such player!");
@@ -102,8 +104,6 @@ export default function usePlayer(sessionId: string): {
         console.error("Error fetching player:", error);
         currentPlayer.value = null;
       }
-
-      console.log("currentPlayerRef", currentPlayer.value);
     }
 
     const playerList = computed(() => players.value);

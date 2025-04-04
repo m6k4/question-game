@@ -3,7 +3,7 @@
 $font-stack: Arial, sans-serif;
 $primary-color: #3498db;
 $primary-hover-color: #2980b9;
-$text-color: #333;
+$text-color: #563d7c;
 $background-color: #f9f9f9;
 $border-radius: 4px;
 $line-height: 1.6;
@@ -71,6 +71,37 @@ button {
         }
     }
 }
+
+.p-button {
+    background-color: white !important; ;
+    color: #563d7c !important;
+    border: none !important; ;
+    border-bottom: 4px solid #4e2a84!important;
+    font-size: 1.6rem !important;
+    padding: 24px !important;
+    border-radius: 10px !important;
+
+    &:hover {
+        background-color: white !important;
+        background: rgba(255, 255, 255, 0.4) !important;;
+        color: #563d7c !important;
+    }
+  }
+
+  .p-inputtext {
+    background: rgba(255, 255, 255, 0.4) !important;
+    color: #563d7c !important;
+    border: 4px solid #fff !important;
+    font-size: 1.6rem !important;
+    padding: 24px !important;
+  }
+
+  .p-select {
+    background: rgba(255, 255, 255, 0.4) !important;
+    color: #563d7c !important;
+    border: 4px solid #fff !important;
+    font-size: 1.6rem !important;
+  }
 
 // Form styles
 input, select, textarea {

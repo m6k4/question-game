@@ -1,5 +1,9 @@
 <script setup lang="ts">
-import { defineProps } from "vue";
+import PlayerAvatar from "@/player/components/PlayerAvatar.vue";
+import { usePlayer } from "@/player/composables/usePlayer";
+import Button from "primevue/button";
+import { useRoute } from "vue-router";
+import { ref } from "vue";
 
 defineProps({
   players: {
@@ -8,20 +12,62 @@ defineProps({
     default: () => [],
   },
 });
+
+const route = useRoute();
+const sessionId = route.params.sessionId;
+const { getCurrentPlayer, currentPlayer } = usePlayer(sessionId);
+const isCopied = ref(false);
+
+getCurrentPlayer();
+
+const copyToClipboard = () => {
+  const url = window.location.href;
+  navigator.clipboard.writeText(url).then(
+    () => {
+      isCopied.value = true;
+    },
+    (err) => {
+      console.error("Could not copy text: ", err);
+      isCopied.value = false;
+    },
+  );
+};
 </script>
 
 <template>
   <div class="WaitingForPlayers">
     <h1>Waiting for all players ...</h1>
+    <Button
+      v-if="currentPlayer?.isHost"
+      class="WaitingForPlayers__inviteButton"
+      @click="copyToClipboard"
+    >
+      <i class="pi pi-link" style="font-size: 1.8rem"></i>
+      Invite friends
+    </Button>
+    <p v-if="isCopied" class="WaitingForPlayers__successMessage">
+      <i class="pi pi-check"></i>
+      Link copied to clipboard!
+    </p>
     <div class="WaitingForPlayers__playerList">
       <div
         v-for="player in players"
         :key="player.id"
-        class="WaitingForPlayers__playerDetails"
+        class="WaitingForPlayers__playerCard"
       >
-        TEST
-        <p class="WaitingForPlayers__playerName">Player: {{ player.name }}</p>
-        <p class="WaitingForPlayers__playerStatus">connected</p>
+        <div class="WaitingForPlayers__cardColumn">
+          <PlayerAvatar :avatar-name="player.avatarName" :is-selected="true" />
+        </div>
+        <div class="WaitingForPlayers__cardColumn">
+          <p class="WaitingForPlayers__title">Player name:</p>
+          <p class="WaitingForPlayers__playerName">
+            {{ player.name }}
+          </p>
+        </div>
+        <div class="WaitingForPlayers__cardColumn">
+          <p class="WaitingForPlayers__title">Status:</p>
+          <p class="WaitingForPlayers__playerStatus">connected</p>
+        </div>
       </div>
     </div>
   </div>
@@ -36,6 +82,23 @@ defineProps({
   flex-direction: column;
   padding: 20px;
 
+  &__inviteButton {
+    margin: 20px 0;
+    color: white;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  &__successMessage {
+    color: #8d9194;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
   &__playerList {
     margin-top: 20px;
     display: flex;
@@ -45,27 +108,39 @@ defineProps({
     max-width: 400px;
   }
 
-  &__playerDetails {
+  &__playerCard {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px;
-    background-color: #ffffff;
-    border: 1px solid #e0e0e0;
+    padding: 20px;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.4);
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     font-size: 16px;
     color: #333;
   }
 
+  &__cardColumn {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+  }
+
+  &__title {
+    font-size: 1.1rem;
+    color: #666;
+    font-weight: bold;
+  }
+
   &__playerName {
     font-weight: bold;
-    font-size: 18px;
+    font-size: 1.4rem;
   }
 
   &__playerStatus {
     color: #4caf50;
     font-weight: bold;
+    font-size: 1.4rem;
   }
 }
 </style>

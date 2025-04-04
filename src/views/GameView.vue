@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRoute } from "vue-router";
-import useSession from "@/session/composables/useSession";
-import usePlayer from "@/player/composables/usePlayer";
+import { useSession } from "@/session/composables/useSession";
+import { usePlayer } from "@/player/composables/usePlayer";
 import WaitingForPlayers from "@/game/components/WaitingForPlayers.vue";
 import WrongSessionId from "@/game/components/WrongSessionId.vue";
 import ActiveGame from "@/game/components/ActiveGame.vue";

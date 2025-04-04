@@ -15,11 +15,12 @@ interface Session {
   currentAnsweringPlayerId: string | null;
   currentQuestionId: string | null;
   timerStartedAt: string | null;
+  level: number | null;
 }
 
-export default function useSession(): {
+export function useSession(): {
   sessionList: Ref<Array<Session>>;
-  createSession: (name: string, playerCount: number) => Promise<void>;
+  createSession: (name: string, playerCount: number, level: number) => Promise<void>;
   updateSession: (updatedFields: Partial<Session>) => Promise<void>;
   createdSessionId: Ref<string>;
   isLoading: Ref<boolean>;
@@ -40,8 +41,6 @@ export default function useSession(): {
       const data = firestoreDefaultConverter.fromFirestore(snapshot);
       if (!data) throw new Error("Invalid session data.");
 
-      
-      console.log("Session data loaded successfully.", data.id);
       return {
         id: data.id,
         name: data.name,
@@ -50,6 +49,7 @@ export default function useSession(): {
         currentAnsweringPlayerId: data.currentAnsweringPlayerId,
         currentQuestionId: data.currentQuestionId,
         timerStartedAt: dayjs.unix(data.timerStartedAt?.seconds).format("YYYY-MM-DDTHH:mm:ss"),
+        level: data.level,
       } as Session;
     },
     toFirestore: firestoreDefaultConverter.toFirestore,
@@ -58,20 +58,21 @@ export default function useSession(): {
     isLoading.value = false;
   })
 
-  const createSession = async (name: string, playerCount: number) => {
+  const createSession = async (name: string, playerCount: number, level: number) => {
     const newSessionDocRef = doc(sessionRef); 
     
     await setDoc(newSessionDocRef, {
       name,
       playerCount,
+      level,
       createdAt: Timestamp.now(),
       currentAnsweringPlayerId: null,
       currentQuestionId: null,
       timerStartedAt: null,
+
     })
     
     createdSessionId.value = newSessionDocRef.id;
-    console.log("Session created successfully.", newSessionDocRef.id);
   }
   
   const updateSession = async (updatedFields: Partial<Session>, startTimer = false): Promise<void> => {
@@ -79,7 +80,6 @@ export default function useSession(): {
     let questionRef = null;
     const specificSessionRef = doc(sessionRef, currentSessionId); 
 
-    console.log("current timestamp", Timestamp.now().toDate());
     if(updatedFields.currentAnsweringPlayerId) {
       playerRef = doc(db, "players", updatedFields.currentAnsweringPlayerId);
     }
@@ -92,7 +92,6 @@ export default function useSession(): {
       ...playerRef && { currentAnsweringPlayerId: playerRef },
       ...questionRef && { currentQuestionId: questionRef },
     }, { merge: true });
-    console.log("Session updated successfully:", currentSessionId);
   };
 
   const sessionList = computed(() => sessions.value);

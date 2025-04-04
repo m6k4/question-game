@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { defineEmits } from "vue";
 import Button from "primevue/button";
 
 const emit = defineEmits([
@@ -48,7 +47,6 @@ const emit = defineEmits([
   flex-direction: row;
   gap: 10px;
   padding: 20px;
-  background-color: #f9f9f9;
   border-radius: 8px;
   width: 100%;
   position: fixed;
@@ -58,6 +56,7 @@ const emit = defineEmits([
   text-align: center;
   max-width: 600px;
   box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.4);
 
   &__button {
     width: 100%;

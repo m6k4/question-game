@@ -4,21 +4,19 @@ import InputText from "primevue/inputtext";
 import Select from "primevue/select";
 import Message from "primevue/message";
 import Button from "primevue/button";
-import Toast from "primevue/toast";
-import { useToast } from "primevue/usetoast";
 import { Form } from "@primevue/forms";
 import { reactive, ref } from "vue";
-import useSession from "@/session/composables/useSession";
+import { useSession } from "@/session/composables/useSession";
 import CreateNewPlayer from "@/player/components/CreateNewPlayer.vue";
 import Popover from "primevue/popover";
 
-const toast = useToast();
 const { createSession, createdSessionId } = useSession();
 const popoverRef = ref();
 
 const initialValues = reactive({
   sessionName: "",
   playersNumber: "",
+  gameLevel: "",
 });
 
 const resolver = ({ values }) => {
@@ -32,6 +30,10 @@ const resolver = ({ values }) => {
     errors.playersNumber = [{ message: "Number of players is required." }];
   }
 
+  if (!values.gameLevel) {
+    errors.gameLevel = [{ message: "Game level is required." }];
+  }
+
   return {
     values,
     errors,
@@ -39,15 +41,11 @@ const resolver = ({ values }) => {
 };
 
 const onFormSubmit = async ({ values }) => {
-  console.log(values);
-  toast.add({
-    severity: "success",
-    summary: "Success",
-    detail: "Session created successfully",
-    life: 3000,
-  });
-
-  createSession(values.sessionName, values.playersNumber.code);
+  createSession(
+    values.sessionName,
+    values.playersNumber.code,
+    values.gameLevel.code,
+  );
 };
 
 const toggleDescriptionPopover = (event) => {
@@ -57,7 +55,6 @@ const toggleDescriptionPopover = (event) => {
 
 <template>
   <div v-if="!createdSessionId" class="CreateNewSession">
-    <Toast />
     <h1>Welcome to the Fun Connection Game!</h1>
     <p>
       Get ready for a fun and interactive experience designed for everyone!
@@ -96,7 +93,7 @@ const toggleDescriptionPopover = (event) => {
       </div>
       <div class="CreateNewSession__form-element">
         <div class="CreateNewSession__form-more-info">
-          <label for="qameLevel">Select game level</label>
+          <label for="gameLevel">Select game level</label>
           <i class="pi pi-info-circle" @click="toggleDescriptionPopover"></i>
           <Popover ref="popoverRef">
             <div class="CreateNewSession__popover">
@@ -119,8 +116,8 @@ const toggleDescriptionPopover = (event) => {
           </Popover>
         </div>
         <Select
-          id="qameLevel"
-          name="qameLevel"
+          id="gameLevel"
+          name="gameLevel"
           :options="gameLevel"
           option-label="name"
           placeholder="Select"
@@ -150,9 +147,9 @@ const toggleDescriptionPopover = (event) => {
     margin-top: 40px;
     width: 100%;
     max-width: 400px;
-    background: #ffffff;
     border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.4);
     padding: 20px;
   }
 
