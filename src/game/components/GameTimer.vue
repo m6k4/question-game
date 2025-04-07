@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, watch } from "vue";
+import { watch } from "vue";
 import { useTimer } from "@/game/composables/useTimer";
 
 const props = defineProps({

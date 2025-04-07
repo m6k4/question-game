@@ -2,13 +2,7 @@
 import { db } from "@/firebase"; 
 import { collection, getDocs, query, where  } from "firebase/firestore"; 
 import { ref, type Ref } from "vue";
-
-
-interface Question {
-  id: string;
-  description: string | null;
-  level: string | null;
-}
+import { type Question } from "@/types/types";
 
 const questionList = ref<Question[]>([]); 
 const availableQuestionList = ref<Question[]>([]);

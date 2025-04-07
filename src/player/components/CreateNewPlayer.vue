@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { Form } from "@primevue/forms";
-import { reactive, ref } from "vue";
+import { Form, type FormSubmitEvent } from "@primevue/forms";
+import { ref } from "vue";
 import InputText from "primevue/inputtext";
 import Button from "primevue/button";
 import { usePlayer } from "@/player/composables/usePlayer";
@@ -28,18 +28,19 @@ const emit = defineEmits(["playerCreated"]);
 
 const isLoading = ref(false);
 
-const initialValues = reactive({
+const initialValues = ref({
   name: "",
   isHost: props.isHost,
 });
 
-const avatarName = ref<string | null>(null);
+const avatarName = ref<string>("");
 
 const selectAvatar = (path: string) => {
   avatarName.value = path;
 };
 
-const onFormSubmit = async ({ values }) => {
+const onFormSubmit = async (event: FormSubmitEvent) => {
+  const values = event.values;
   isLoading.value = true;
   createPlayer({
     sessionId: props.sessionId,

@@ -1,16 +1,10 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import PlayerAvatar from "@/player/components/PlayerAvatar.vue";
+import { avatarNames } from "@/utils/constants";
 
 const emit = defineEmits(["avatarSelected"]);
 const selectedAvatar = ref<string | null>(null);
-
-//change path due to problem with absolute path
-const avatars = import.meta.glob("../../assets/avatars/*.svg", { eager: true });
-
-const avatarNames: Array<string> = Object.entries(avatars).map(
-  ([path]) => path.split("/").pop()?.replace(".svg", "") || "",
-);
 
 const selectAvatar = (avatarName: string) => {
   selectedAvatar.value = avatarName;

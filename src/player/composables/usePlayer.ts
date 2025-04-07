@@ -92,12 +92,10 @@ export function usePlayer(sessionId: string): {
       }
     }
 
-    const playerList = computed(() => players.value);
-
   return {
-    playerList,
+    playerList: computed(() => players.value as Player[]),
     createPlayer,
     getCurrentPlayer,
-    currentPlayer: computed(() => currentPlayer.value as Player),
+    currentPlayer,
   };
 }

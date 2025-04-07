@@ -6,29 +6,21 @@ import { computed, ref, type Ref } from "vue";
 import { firestoreDefaultConverter } from 'vuefire'
 import { useRoute } from "vue-router";
 import dayjs from "dayjs";
-
-interface Session {
-  id: string;
-  name: string | null;
-  createdAt: string | null; 
-  playerCount: number | null;
-  currentAnsweringPlayerId: string | null;
-  currentQuestionId: string | null;
-  timerStartedAt: string | null;
-  level: number;
-}
+import { type Session, type SessionParamsToUpdate } from "@/types/types";
 
 export function useSession(): {
   sessionList: Ref<Array<Session>>;
   createSession: (name: string, playerCount: number, level: number) => Promise<void>;
-  updateSession: (updatedFields: Partial<Session>, startTimer: boolean) => Promise<void>;
+  updateSession: (updatedFields: Partial<SessionParamsToUpdate>) => Promise<void>;
   createdSessionId: Ref<string>;
   isLoading: Ref<boolean>;
   currentSessionDetails: Ref<Session | null>;
+  currentSessionId: string;
 } {
 
   const route = useRoute();
-  const currentSessionId = route.params.sessionId as string;
+  const sessionIdFromRoute = route.params.sessionId;
+  const currentSessionId = Array.isArray(sessionIdFromRoute) ? sessionIdFromRoute[0] : sessionIdFromRoute;
  
   const createdSessionId = ref<string>("");
   const isLoading = ref<boolean>(false);
@@ -46,8 +38,8 @@ export function useSession(): {
         name: data.name,
         createdAt: data.createdAt,
         playerCount: data.playerCount,
-        currentAnsweringPlayerId: data.currentAnsweringPlayerId,
-        currentQuestionId: data.currentQuestionId,
+        currentAnsweringPlayerRef: data.currentAnsweringPlayerRef,
+        currentQuestionRef: data.currentQuestionRef,
         timerStartedAt: data.timerStartedAt 
         ? dayjs.unix(data.timerStartedAt?.seconds).format("YYYY-MM-DDTHH:mm:ss") 
         : null,
@@ -68,18 +60,18 @@ export function useSession(): {
       playerCount,
       level,
       createdAt: Timestamp.now(),
-      currentAnsweringPlayerId: null,
-      currentQuestionId: null,
+      currentAnsweringPlayerRef: null,
+      currentQuestionRef: null,
       timerStartedAt: null,
-
     })
     
     createdSessionId.value = newSessionDocRef.id;
   }
   
-  const updateSession = async (updatedFields: Partial<Session>, startTimer = false): Promise<void> => {
+  const updateSession = async (updatedFields: Partial<SessionParamsToUpdate>): Promise<void> => {
     let playerRef = null;
     let questionRef = null;
+    let timerStartedAt = null;
     const specificSessionRef = doc(sessionRef, currentSessionId); 
 
     if(updatedFields.currentAnsweringPlayerId) {
@@ -88,11 +80,14 @@ export function useSession(): {
     if(updatedFields.currentQuestionId) {
       questionRef = doc(db, "questions", updatedFields.currentQuestionId);
     }
+    if(updatedFields.startTimer) {
+      timerStartedAt = Timestamp.now();
+    }
     await setDoc(specificSessionRef, {
       ...updatedFields,
-      ...startTimer && { timerStartedAt: Timestamp.now() },
-      ...playerRef && { currentAnsweringPlayerId: playerRef },
-      ...questionRef && { currentQuestionId: questionRef },
+      ...timerStartedAt && { timerStartedAt: Timestamp.now() },
+      ...playerRef && { currentAnsweringPlayerRef: playerRef },
+      ...questionRef && { currentQuestionRef: questionRef },
     }, { merge: true });
   };
 
@@ -110,5 +105,6 @@ export function useSession(): {
     createdSessionId,
     isLoading,
     currentSessionDetails,
+    currentSessionId,
   };
 }

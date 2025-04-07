@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useRoute } from "vue-router";
 import { useSession } from "@/session/composables/useSession";
 import { usePlayer } from "@/player/composables/usePlayer";
 import WaitingForPlayers from "@/game/components/WaitingForPlayers.vue";
@@ -9,16 +8,14 @@ import TheLoader from "@/components/common/TheLoader.vue";
 import CreateNewPlayer from "@/player/components/CreateNewPlayer.vue";
 import { watch, ref, computed } from "vue";
 
-const route = useRoute();
-
-const sessionId = route.params.sessionId;
 const isPlayerInLocalStorageInList = ref(false);
 
-const { sessionList, isLoading, currentSessionDetails } = useSession();
-const { playerList } = usePlayer(sessionId);
+const { sessionList, isLoading, currentSessionDetails, currentSessionId } =
+  useSession();
+const { playerList } = usePlayer(currentSessionId);
 
 const isValidSessionId = () => {
-  return sessionList.value.some((session) => session.id === sessionId);
+  return sessionList.value.some((session) => session.id === currentSessionId);
 };
 
 watch(playerList, () => {
@@ -26,7 +23,7 @@ watch(playerList, () => {
 });
 
 const isAllPlayersReady = computed(() => {
-  return currentSessionDetails.value.playerCount == playerList.value.length;
+  return currentSessionDetails?.value?.playerCount == playerList.value.length;
 });
 
 const setIsPlayerInLocalStorageInList = () => {
@@ -57,7 +54,7 @@ const playerCreated = () => {
       />
       <CreateNewPlayer
         v-else
-        :session-id="sessionId"
+        :session-id="currentSessionId"
         :is-host="false"
         @player-created="playerCreated()"
       />

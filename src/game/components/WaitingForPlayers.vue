@@ -1,21 +1,21 @@
 <script setup lang="ts">
 import PlayerAvatar from "@/player/components/PlayerAvatar.vue";
 import { usePlayer } from "@/player/composables/usePlayer";
+import { useSession } from "@/session/composables/useSession";
 import Button from "primevue/button";
-import { useRoute } from "vue-router";
-import { ref } from "vue";
+import { type PropType, ref } from "vue";
+import { type Player } from "@/types/types";
 
 defineProps({
   players: {
-    type: Array,
+    type: Array as PropType<Player[]>,
     required: true,
     default: () => [],
   },
 });
 
-const route = useRoute();
-const sessionId = route.params.sessionId;
-const { getCurrentPlayer, currentPlayer } = usePlayer(sessionId);
+const { currentSessionId } = useSession();
+const { getCurrentPlayer, currentPlayer } = usePlayer(currentSessionId);
 const isCopied = ref(false);
 
 getCurrentPlayer();

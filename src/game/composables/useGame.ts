@@ -2,7 +2,7 @@ import { ref, type Ref, computed, onMounted } from "vue";
 import { useQuestion } from "@/question/composables/useQuestion";
 import { usePlayer } from "@/player/composables/usePlayer";
 import { useSession } from "@/session/composables/useSession";
-import { type Player } from "@/types/types";
+import { type Player, type Question } from "@/types/types";
 
 export function useGame(sessionId: string, players: Array<Player>):
 {
@@ -10,7 +10,7 @@ export function useGame(sessionId: string, players: Array<Player>):
   getNextPlayer: () => Promise<void>;
   getNextQuestion: () => void;
   startTimer: () => void;
-  currentQuestionFromSession: Ref<string | null>;
+  currentQuestionFromSession: Ref<Question | null>;
   currentPlayer: Ref<Player | null>;
   answeringPlayerIndex: Ref<number>;
 } {
@@ -30,7 +30,7 @@ export function useGame(sessionId: string, players: Array<Player>):
     updateSession({
       currentQuestionId: drawnQuestion.value!.id,
       currentAnsweringPlayerId: answeringPlayer.value!.id,
-    }, false);
+    });
     startTimer();
   };
 
@@ -47,7 +47,7 @@ export function useGame(sessionId: string, players: Array<Player>):
     drawQuestion();
     updateSession({
       currentQuestionId: drawnQuestion.value!.id
-    }, false);
+    });
   };
 
   const getNextPlayer = async () => {
@@ -55,16 +55,16 @@ export function useGame(sessionId: string, players: Array<Player>):
     answeringPlayer.value = players[answeringPlayerIndex.value];
     updateSession({
       currentAnsweringPlayerId: answeringPlayer.value.id,
-    }, false);
+    });
     localStorage.setItem("playerIndex", JSON.stringify(answeringPlayerIndex.value));
   };
 
   const startTimer = () => {
-    updateSession({}, true);
+    updateSession({startTimer: true});
   };
 
   const currentQuestionFromSession = computed(() => {
-    return currentSessionDetails.value!.currentQuestionId;
+    return currentSessionDetails.value?.currentQuestionRef ?? null;
   });
 
   onMounted(() => {

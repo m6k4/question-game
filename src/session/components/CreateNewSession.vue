@@ -4,23 +4,29 @@ import InputText from "primevue/inputtext";
 import Select from "primevue/select";
 import Message from "primevue/message";
 import Button from "primevue/button";
-import { Form } from "@primevue/forms";
-import { reactive, ref } from "vue";
+import {
+  Form,
+  type FormSubmitEvent,
+  type FormResolverOptions,
+} from "@primevue/forms";
+import { ref } from "vue";
 import { useSession } from "@/session/composables/useSession";
 import CreateNewPlayer from "@/player/components/CreateNewPlayer.vue";
 import Popover from "primevue/popover";
+import { type FormErrors } from "@/session/types/types";
 
 const { createSession, createdSessionId } = useSession();
 const popoverRef = ref();
-
-const initialValues = reactive({
+const isLoading = ref(false);
+const initialValues = ref({
   sessionName: "",
   playersNumber: "",
   gameLevel: "",
 });
 
-const resolver = ({ values }) => {
-  const errors = {};
+const resolver = (event: FormResolverOptions) => {
+  const values = event.values;
+  const errors: FormErrors = {};
 
   if (!values.sessionName) {
     errors.sessionName = [{ message: "Session name is required." }];
@@ -40,15 +46,19 @@ const resolver = ({ values }) => {
   };
 };
 
-const onFormSubmit = async ({ values }) => {
+const onFormSubmit = async (event: FormSubmitEvent) => {
+  const values = event.values;
+  isLoading.value = true;
   createSession(
     values.sessionName,
     values.playersNumber.code,
     values.gameLevel.code,
-  );
+  ).then(() => {
+    isLoading.value = false;
+  });
 };
 
-const toggleDescriptionPopover = (event) => {
+const toggleDescriptionPopover = (event: MouseEvent) => {
   popoverRef.value.toggle(event);
 };
 </script>
@@ -128,6 +138,7 @@ const toggleDescriptionPopover = (event) => {
         severity="info"
         label="Submit"
         class="CreateNewSession__button"
+        :loading="isLoading"
       />
     </Form>
   </div>

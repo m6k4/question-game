@@ -11,3 +11,14 @@ export const gameLevel =
     { name: "Friends", code: "2" },
     { name: "Good Friends", code: "3" }
   ]
+
+export const avatarNames = [
+  "amaya",
+  "chase",
+  "eden",
+  "luis",
+  "nolan",
+  "oliver",
+  "valentina",
+  "wyatt",
+]
