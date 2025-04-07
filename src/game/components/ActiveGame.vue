@@ -36,7 +36,6 @@ console.log("currentPlayer");
       Wait until host starts the game...
     </div>
     <div v-else class="ActiveGame__board">
-      {{ currentQuestionFromSession }} QUESTION
       <QuestionCard
         :description="currentQuestionFromSession?.description ?? ''"
       />
