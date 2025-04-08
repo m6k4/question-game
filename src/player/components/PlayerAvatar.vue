@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { computed } from "vue";
+
 const props = defineProps({
   avatarName: {
     type: String,
@@ -13,6 +15,12 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["avatarSelected"]);
+const avatarSrc = computed(() => {
+  return new URL(
+    `../../assets/avatars/${props.avatarName}.svg`,
+    import.meta.url,
+  ).href;
+});
 </script>
 <template>
   <div
@@ -22,7 +30,7 @@ const emit = defineEmits(["avatarSelected"]);
     }"
     @click="() => emit('avatarSelected', props.avatarName)"
   >
-    <img :src="`src/assets/avatars/amaya.svg`" alt="Avatar" />
+    <img :src="avatarSrc" alt="Avatar" />
   </div>
 </template>
 
