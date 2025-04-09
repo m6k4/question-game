@@ -20,8 +20,8 @@ const popoverRef = ref();
 const isLoading = ref(false);
 const initialValues = ref({
   sessionName: "",
-  playersNumber: "",
-  gameLevel: "",
+  playersNumber: playerNumberOptions[0],
+  gameLevel: gameLevel[0],
 });
 
 const resolver = (event: FormResolverOptions) => {
@@ -48,14 +48,17 @@ const resolver = (event: FormResolverOptions) => {
 
 const onFormSubmit = async (event: FormSubmitEvent) => {
   const values = event.values;
-  isLoading.value = true;
-  createSession(
-    values.sessionName,
-    values.playersNumber.code,
-    values.gameLevel.code,
-  ).then(() => {
-    isLoading.value = false;
-  });
+  const valid = event.valid;
+  if (valid) {
+    isLoading.value = true;
+    createSession(
+      values.sessionName,
+      values.playersNumber.code,
+      values.gameLevel.code,
+    ).then(() => {
+      isLoading.value = false;
+    });
+  }
 };
 
 const toggleDescriptionPopover = (event: MouseEvent) => {
@@ -162,6 +165,9 @@ const toggleDescriptionPopover = (event: MouseEvent) => {
     box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
     background: rgba(255, 255, 255, 0.4);
     padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
   }
 
   &__button {
@@ -177,9 +183,9 @@ const toggleDescriptionPopover = (event: MouseEvent) => {
 
   &__form-element {
     width: 100%;
-    margin-bottom: 20px;
     display: flex;
     flex-direction: column;
+    position: relative;
 
     label {
       color: #333;
@@ -209,7 +215,8 @@ const toggleDescriptionPopover = (event: MouseEvent) => {
   }
 
   .p-message {
-    margin-top: -10px;
+    position: absolute;
+    top: 90px;
   }
 
   &__popover {

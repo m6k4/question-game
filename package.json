@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
+    "type-check": "vue-tsc -b",
     "preview": "vite preview",
     "lint": "eslint --ext .js,.vue --ignore-pattern .gitignore --fix src",
     "format": "prettier .  --write"

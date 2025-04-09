@@ -14,15 +14,10 @@ export function usePlayer(sessionId: string): {
   currentPlayer: Ref<Player | null>;
 } {
 
-    // const route = useRoute();
     const currentSessionId = sessionId;
 
     const currentSessionRef = doc(db, "sessions", currentSessionId);
-
-
     const currentPlayer = ref<Player | null>(null);
-    // const currentSessionRef = doc(db, "sessions", currentSessionId);
-
     const playersRef = collection(db, "players");
 
     const playersFromCurrentSessionRef = query(playersRef, where("sessionId", "==", currentSessionRef));
