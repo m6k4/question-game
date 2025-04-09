@@ -5,12 +5,12 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 </script>
 <template>
-  <div class="WrongSessionId">
+  <div class="SessionIdError">
     <h1>Wrong Session ID</h1>
     <p>Sorry, the session ID you entered is invalid.</p>
 
     <Button
-      class="WrongSessionId__button"
+      class="SessionIdError__button"
       label="Create new session"
       @click="router.push('/')"
     />
@@ -18,7 +18,7 @@ const router = useRouter();
 </template>
 
 <style scoped lang="scss">
-.WrongSessionId {
+.SessionIdError {
   display: flex;
   flex-direction: column;
   align-items: center;

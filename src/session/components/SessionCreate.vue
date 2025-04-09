@@ -11,7 +11,7 @@ import {
 } from "@primevue/forms";
 import { ref } from "vue";
 import { useSession } from "@/session/composables/useSession";
-import CreateNewPlayer from "@/player/components/CreateNewPlayer.vue";
+import PlayerCreate from "@/player/components/PlayerCreate.vue";
 import Popover from "primevue/popover";
 import { type FormErrors } from "@/session/types/types";
 
@@ -67,7 +67,7 @@ const toggleDescriptionPopover = (event: MouseEvent) => {
 </script>
 
 <template>
-  <div v-if="!createdSessionId" class="CreateNewSession">
+  <div v-if="!createdSessionId" class="SessionCreate">
     <h1>Welcome to the Fun Connection Game!</h1>
     <p>
       Get ready for a fun and interactive experience designed for everyone!
@@ -77,12 +77,12 @@ const toggleDescriptionPopover = (event: MouseEvent) => {
 
     <Form
       v-slot="$form"
-      class="CreateNewSession__form"
+      class="SessionCreate__form"
       :initial-values
       :resolver
       @submit="onFormSubmit"
     >
-      <div class="CreateNewSession__form-element">
+      <div class="SessionCreate__form-element">
         <label for="sessionName">Session name</label>
         <InputText id="sessionName" name="sessionName" type="text" />
         <Message
@@ -94,7 +94,7 @@ const toggleDescriptionPopover = (event: MouseEvent) => {
           {{ $form.sessionName.error?.message }}
         </Message>
       </div>
-      <div class="CreateNewSession__form-element">
+      <div class="SessionCreate__form-element">
         <label for="playersNumber">Select number of players</label>
         <Select
           id="playersNumber"
@@ -104,16 +104,16 @@ const toggleDescriptionPopover = (event: MouseEvent) => {
           placeholder="Select"
         />
       </div>
-      <div class="CreateNewSession__form-element">
-        <div class="CreateNewSession__form-more-info">
+      <div class="SessionCreate__form-element">
+        <div class="SessionCreate__form-more-info">
           <label for="gameLevel">Select game level</label>
           <i class="pi pi-info-circle" @click="toggleDescriptionPopover"></i>
           <Popover ref="popoverRef">
-            <div class="CreateNewSession__popover">
-              <div class="CreateNewSession__popover-title">
+            <div class="SessionCreate__popover">
+              <div class="SessionCreate__popover-title">
                 Choose a game level that suits your group.
               </div>
-              <p class="CreateNewSession__popover-description">
+              <p class="SessionCreate__popover-description">
                 <strong>Beginners:</strong> Perfect for those who don't know
                 each other well yet.
                 <br />
@@ -140,16 +140,16 @@ const toggleDescriptionPopover = (event: MouseEvent) => {
         type="submit"
         severity="info"
         label="Submit"
-        class="CreateNewSession__button"
+        class="SessionCreate__button"
         :loading="isLoading"
       />
     </Form>
   </div>
-  <CreateNewPlayer v-else :session-id="createdSessionId" :is-host="true" />
+  <PlayerCreate v-else :session-id="createdSessionId" :is-host="true" />
 </template>
 
 <style scoped lang="scss">
-.CreateNewSession {
+.SessionCreate {
   display: flex;
   flex-direction: column;
   align-items: center;

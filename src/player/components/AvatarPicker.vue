@@ -3,30 +3,30 @@ import { ref } from "vue";
 import PlayerAvatar from "@/player/components/PlayerAvatar.vue";
 import { avatarNames } from "@/utils/constants";
 
-const emit = defineEmits(["avatarSelected"]);
+const emit = defineEmits(["selectAvatar"]);
 const selectedAvatar = ref<string | null>(null);
 
 const selectAvatar = (avatarName: string) => {
   selectedAvatar.value = avatarName;
-  emit("avatarSelected", avatarName);
+  emit("selectAvatar", avatarName);
 };
 </script>
 
 <template>
-  <div class="AvatarSelect">
+  <div class="AvatarPicker">
     <PlayerAvatar
       v-for="(avatarName, index) in avatarNames"
       :key="index"
       :avatar-name="avatarName"
       :is-selected="selectedAvatar === avatarName"
-      class="AvatarSelect__avatar"
-      @avatar-selected="selectAvatar"
+      class="AvatarPicker__avatar"
+      @select-avatar="selectAvatar"
     />
   </div>
 </template>
 
 <style scoped lang="scss">
-.AvatarSelect {
+.AvatarPicker {
   display: flex;
   flex-direction: row;
   align-items: center;

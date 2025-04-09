@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // import TheFooter from "@/components/platform/TheFooter.vue";
 // import TheMenu from "@/components/platform/TheMenu.vue";
-// import CreateNewSession from "@/session/components/CreateNewSession.vue";
+// import SessionCreate from "@/session/components/SessionCreate.vue";
 // import { db } from "@/firebase";
 //get collection from firebase
 // import { useCollection, useDocument } from "vuefire";
@@ -19,7 +19,7 @@
   <div class="PlatformView">
     <!-- <TheMenu /> -->
     <div class="PlatformView__content">
-      <!-- <CreateNewSession /> -->
+      <!-- <SessionCreate /> -->
       <router-view />
     </div>
     <!-- <div class="PlatformView__footer">

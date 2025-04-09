@@ -8,8 +8,8 @@ defineProps({
 });
 </script>
 <template>
-  <div class="QuestionCard">
-    <div class="QuestionCard__description">
+  <div class="CardQuestion">
+    <div class="CardQuestion__description">
       <p>{{ description }}?</p>
     </div>
   </div>
@@ -18,7 +18,7 @@ defineProps({
 <style scoped lang="scss">
 @import url("https://fonts.googleapis.com/css2?family=Atma:wght@300;400;500;600;700&family=Limelight&family=Playfair+Display&display=swap");
 
-.QuestionCard {
+.CardQuestion {
   font-family: "Atma", system-ui;
   font-weight: 400;
   font-style: normal;

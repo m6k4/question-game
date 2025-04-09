@@ -1,11 +1,11 @@
 <template>
-  <div class="EmptyList">
+  <div class="CommonEmptyList">
     <p>No items found</p>
   </div>
 </template>
 
 <style scoped lang="scss">
-.EmptyList {
+.CommonEmptyList {
   display: flex;
   justify-content: center;
   align-items: center;

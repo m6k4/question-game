@@ -12,10 +12,12 @@ const handleSearch = () => {
 </script>
 
 <template>
-  <InputText
-    v-model="searchedValue"
-    type="text"
-    placeholder="Search by name"
-    @input="handleSearch"
-  />
+  <div class="CommonSearchBar">
+    <InputText
+      v-model="searchedValue"
+      type="text"
+      placeholder="Search by name"
+      @input="handleSearch"
+    />
+  </div>
 </template>

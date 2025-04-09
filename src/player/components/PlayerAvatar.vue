@@ -14,7 +14,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["avatarSelected"]);
+const emit = defineEmits(["selectAvatar"]);
 const avatarSrc = computed(() => {
   return new URL(
     `../../assets/avatars/${props.avatarName}.svg`,
@@ -28,7 +28,7 @@ const avatarSrc = computed(() => {
     :class="{
       'PlayerAvatar--selected': props.isSelected,
     }"
-    @click="() => emit('avatarSelected', props.avatarName)"
+    @click="() => emit('selectAvatar', props.avatarName)"
   >
     <img :src="avatarSrc" alt="Avatar" />
   </div>

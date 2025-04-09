@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import CreateNewSession from "@/session/components/CreateNewSession.vue";
+import SessionCreate from "@/session/components/SessionCreate.vue";
 </script>
 
 <template>
-  <CreateNewSession />
+  <SessionCreate />
 </template>

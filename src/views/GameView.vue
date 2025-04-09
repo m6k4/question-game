@@ -2,10 +2,10 @@
 import { useSession } from "@/session/composables/useSession";
 import { usePlayer } from "@/player/composables/usePlayer";
 import WaitingForPlayers from "@/game/components/WaitingForPlayers.vue";
-import WrongSessionId from "@/game/components/WrongSessionId.vue";
-import ActiveGame from "@/game/components/ActiveGame.vue";
-import TheLoader from "@/components/common/TheLoader.vue";
-import CreateNewPlayer from "@/player/components/CreateNewPlayer.vue";
+import SessionIdError from "@/game/components/SessionIdError.vue";
+import GameActive from "@/game/components/GameActive.vue";
+import CommonLoader from "@/components/common/CommonLoader.vue";
+import PlayerCreate from "@/player/components/PlayerCreate.vue";
 import { watch, ref, computed } from "vue";
 
 const isPlayerInLocalStorageInList = ref(false);
@@ -44,15 +44,15 @@ const playerCreated = () => {
 </script>
 
 <template>
-  <TheLoader v-if="isLoading" />
+  <CommonLoader v-if="isLoading" />
   <div v-else class="GameView">
-    <WrongSessionId v-if="!isValidSessionId()" />
+    <SessionIdError v-if="!isValidSessionId()" />
     <div v-else-if="isValidSessionId() && !isAllPlayersReady">
       <WaitingForPlayers
         v-if="isPlayerInLocalStorageInList"
         :players="playerList"
       />
-      <CreateNewPlayer
+      <PlayerCreate
         v-else
         :session-id="currentSessionId"
         :is-host="false"
@@ -60,7 +60,7 @@ const playerCreated = () => {
       />
     </div>
     <div v-else>
-      <ActiveGame :players="playerList" />
+      <GameActive :players="playerList" />
     </div>
   </div>
 </template>

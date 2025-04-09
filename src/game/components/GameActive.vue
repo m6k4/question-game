@@ -3,8 +3,8 @@ import { type PropType } from "vue";
 import { useGame } from "@/game/composables/useGame";
 import { useSession } from "@/session/composables/useSession";
 import GameTimer from "@/game/components/GameTimer.vue";
-import QuestionCard from "@/question/components/QuestionCard.vue";
-import HostControlsPanel from "@/game/components/HostControlsPanel.vue";
+import CardQuestion from "@/question/components/CardQuestion.vue";
+import PanelHostControls from "@/game/components/PanelHostControls.vue";
 import PlayerGameCard from "@/player/components/PlayerGameCard.vue";
 import { type Player } from "@/types/types";
 
@@ -30,20 +30,20 @@ console.log("currentPlayer");
 </script>
 
 <template>
-  <div class="ActiveGame">
-    <h1 class="ActiveGame__title">Let's answer the question!</h1>
-    <div v-if="!currentQuestionFromSession" class="ActiveGame__waiting">
+  <div class="GameActive">
+    <h1 class="GameActive__title">Let's answer the question!</h1>
+    <div v-if="!currentQuestionFromSession" class="GameActive__waiting">
       Wait until host starts the game...
     </div>
-    <div v-else class="ActiveGame__board">
-      <QuestionCard
+    <div v-else class="GameActive__board">
+      <CardQuestion
         :description="currentQuestionFromSession?.description ?? ''"
       />
       <GameTimer
         v-if="currentSessionDetails?.timerStartedAt"
         :start-date="currentSessionDetails.timerStartedAt"
       />
-      <div class="ActiveGame__playerList">
+      <div class="GameActive__playerList">
         <PlayerGameCard
           v-for="player in players"
           :key="player.id"
@@ -55,7 +55,7 @@ console.log("currentPlayer");
         />
       </div>
     </div>
-    <HostControlsPanel
+    <PanelHostControls
       v-if="currentPlayer?.isHost"
       @start-game="startGame"
       @get-next-player="getNextPlayer"
@@ -66,7 +66,7 @@ console.log("currentPlayer");
 </template>
 
 <style scoped lang="scss">
-.ActiveGame {
+.GameActive {
   display: flex;
   flex-direction: column;
   align-items: center;
